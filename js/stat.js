@@ -49,8 +49,8 @@ window.renderStatistics = function (ctx, players, times) {
     if (players[i] === 'Вы') {
       renderBar('rgba(255, 0, 0, 1)');
     } else {
-      var Saturation = Math.floor(Math.random() * 100);
-      renderBar('hsl(240,' + Saturation + '%,50%)');
+      var saturation = Math.floor(Math.random() * 100);
+      renderBar('hsl(240,' + saturation + '%,50%)');
     }
   }
 };
