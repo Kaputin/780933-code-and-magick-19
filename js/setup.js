@@ -67,74 +67,68 @@ var inputWizardEyes = document.querySelector('input[name = eyes-color]');
 var setupFireballWrap = document.querySelector('.setup-fireball-wrap');
 var inputFireballColor = setupFireballWrap.querySelector('input[name = fireball-color]');
 
-var onPopupEscPress = function (evt) {
-  if (setup.querySelector('.setup-user-name') === document.activeElement) {
-    return; // тут ругается если нет return
-  } else {
-    if (evt.key === ESC_KEY) {
-      closePopup();
-    }
-  }
-};
-
-// далее сделал на каждую часть мага отдельную функцию, пытался сделать одну ниверсальную, но там у меня получилось слишком много if else
-
-var getRandomWizardCoat = function () {
+var onWizardCoatClick = function () {
   var randomColor = getRandomWizarElement(WIZARD_COAT_COLOR);
   setupWizardCoat.style.fill = randomColor;
   inputWizardCoat.value = randomColor;
 };
 
-var getRandomWizardEyes = function () {
+var onWizardEyesClick = function () {
   var randomColor = getRandomWizarElement(WIZARD_EYES_COLOR);
   setupWizardEyes.style.fill = randomColor;
   inputWizardEyes.value = randomColor;
 };
 
-var getRandomFireballColor = function () {
+var onWizardFireballClick = function () {
   var randomColor = getRandomWizarElement(WIZARD_FIREBALL_COLOR);
   setupFireballWrap.style.background = randomColor;
   inputFireballColor.value = randomColor;
 };
 
+setupWizardCoat.addEventListener('click', onWizardCoatClick);
+
+setupWizardEyes.addEventListener('click', onWizardEyesClick);
+
+setupFireballWrap.addEventListener('click', onWizardFireballClick);
+
+var onPopupEscPress = function (evt) {
+  if (setup.querySelector('.setup-user-name') === document.activeElement) {
+    evt.preventDefault();
+  } else if (evt.key === ESC_KEY) {
+    closePopup();
+  }
+};
+
 var openPopup = function () {
   setup.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
+  setupOpen.removeEventListener('click', openPopup);
+  setupOpen.removeEventListener('keydown', openPopup);
+  setupClose.addEventListener('click', closePopup);
+  setupClose.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      closePopup();
+    }
+  });
 };
 
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  setupOpen.removeEventListener('click', closePopup);
+  setupOpen.removeEventListener('keydown', closePopup);
+  setupOpen.addEventListener('click', openPopup);
+  setupOpen.addEventListener('keydown', function (evt) {
+    if (evt.key === ENTER_KEY) {
+      openPopup();
+    }
+  });
 };
 
-setupOpen.addEventListener('click', function () {
-  openPopup();
-});
+setupOpen.addEventListener('click', openPopup);
 
 setupOpen.addEventListener('keydown', function (evt) {
   if (evt.key === ENTER_KEY) {
     openPopup();
   }
-});
-
-setupClose.addEventListener('click', function () {
-  closePopup();
-});
-
-setupClose.addEventListener('keydown', function (evt) {
-  if (evt.key === ENTER_KEY) {
-    closePopup();
-  }
-});
-
-setupWizardCoat.addEventListener('click', function () {
-  getRandomWizardCoat();
-});
-
-setupWizardEyes.addEventListener('click', function () {
-  getRandomWizardEyes();
-});
-
-setupFireballWrap.addEventListener('click', function () {
-  getRandomFireballColor();
 });
