@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEY = 'Escape';
-  var ENTER_KEY = 'Enter';
   var START_DIALOG_Y = '80px';
   var START_DIALOG_X = '50%';
 
@@ -14,7 +12,7 @@
   var onPopupEscPress = function (evt) {
     if (setup.querySelector('.setup-user-name') === document.activeElement) {
       return;
-    } else if (evt.key === ESC_KEY) {
+    } else if (evt.key === window.util.ESC_KEY) {
       closePopup();
     }
   };
@@ -33,7 +31,7 @@
   };
 
   var onOpenPopupKeydown = function (evt) {
-    if (evt.key === ENTER_KEY) {
+    if (evt.key === window.util.ENTER_KEY) {
       openPopup();
     }
   };
@@ -54,7 +52,7 @@
   };
 
   var onClosePopupKeydown = function (evt) {
-    if (evt.key === ENTER_KEY) {
+    if (evt.key === window.util.ENTER_KEY) {
       closePopup();
     }
   };
@@ -62,4 +60,29 @@
   setupOpen.addEventListener('click', onOpenPopupClick);
 
   setupOpen.addEventListener('keydown', onOpenPopupKeydown);
+
+  var form = setup.querySelector('.setup-wizard-form');
+
+
+  var onSuccess = function () {
+    setup.classList.add('hidden');
+  };
+
+  var onError = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backendSave(new FormData(form), onSuccess, onError);
+    evt.preventDefault();
+  });
+
 })();
